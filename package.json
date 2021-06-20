@@ -1,0 +1,22 @@
+{
+  "name": "temp-sense",
+  "version": "1.0.0",
+  "description": "Web application for processing and viWeb application for processing and visualizing temperature and humidity data sent from Arduino Nano 33 IoT modules",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/khalilv/temp-sense.git"
+  },
+  "author": "Khalil Virji",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/khalilv/temp-sense/issues"
+  },
+  "homepage": "https://github.com/khalilv/temp-sense#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
