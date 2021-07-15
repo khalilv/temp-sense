@@ -49,19 +49,19 @@ void loop() {
     //take temperature data
     delay(1000); 
     char dummy [] = "temp:200//humidity:33";
-    Serial.println(str_len(dummy));
+
     //send post req
-    if (post_data(dummy, 21)) {
-      Serial.print("Sent data successfully to network: ");
-      Serial.println(ssid);
+    if (post_data(dummy, str_len(dummy))) {
+      Serial.print("Sent data successfully to server: ");
+      Serial.println(server);
     }else{
-      Serial.print("Could not post data to network: ");
-      Serial.println(ssid);
+      Serial.print("Could not post data to server: ");
+      Serial.println(server);
     }
 
     //disconnect from wifi
-
-   
+    WiFi.end();
+       
   }else {
     Serial.print("Could not connect to network: ");
     Serial.println(ssid);
@@ -84,9 +84,7 @@ boolean post_data(char body[], int len) {
   strcat(host, server);
   strcat(host, ":");
   strcat(host, port);
-  Serial.println(host);
-  Serial.println(str_len(host));
-
+  
   itoa(len, body_length, 10);
   strcat(content_length, "Content-Length: ");
   strcat(content_length, body_length);  
