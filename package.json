@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/khalilv/temp-sense#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^5.13.2",
+    "xmlhttprequest": "^1.8.0"
   }
 }
