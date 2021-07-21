@@ -1,4 +1,4 @@
-const format = RegExp('^sensor:(\w)*\/\/temperature:(\d*\.?\d*)\/\/humidity:(\d*\.?\d*)$');
+const format = RegExp('^sensor:(\\w)*//temperature:(\\d*\\.?\\d*)//humidity:(\\d*\\.?\\d*)$');
 
 exports.processRequest = (body) => {
     if (format.test(body)){
