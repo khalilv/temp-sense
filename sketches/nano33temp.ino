@@ -50,8 +50,8 @@ void loop() {
     delay(1000); 
     char dummy [] = "temp:200//humidity:33";
 
-    //send post req
-    if (post_data(dummy, str_len(dummy))) {
+    //send post req 
+    if (post_data(dummy)) {
       Serial.print("Sent data successfully to server: ");
       Serial.println(server);
     }else{
@@ -60,18 +60,18 @@ void loop() {
     }
 
     //disconnect from wifi
-    WiFi.end();
+    //WiFi.end();
        
   }else {
     Serial.print("Could not connect to network: ");
     Serial.println(ssid);
   }
   //sleep
-  delay(10000); 
+  delay(20000); 
 }
 
 // this method makes a HTTP connection to the server:
-boolean post_data(char body[], int len) {
+boolean post_data(char body[]) {
   byte attempts = 0;
   int port_num = atoi(port);
   char host[100] = {0};
@@ -85,7 +85,7 @@ boolean post_data(char body[], int len) {
   strcat(host, ":");
   strcat(host, port);
   
-  itoa(len, body_length, 10);
+  itoa(str_len(body), body_length, 10);
   strcat(content_length, "Content-Length: ");
   strcat(content_length, body_length);  
 
@@ -99,6 +99,8 @@ boolean post_data(char body[], int len) {
       client.println(content_length);
       client.println();
       client.println(body);
+      client.println();
+      client.stop();
       return true;
     }
     attempts++;
