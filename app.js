@@ -6,7 +6,7 @@ const db = process.env.MONGODB_URI
 const sensors = require('./database/sensors');
 const helpers = require('./helpers');
 const winston = require('winston');
-const sensorIPs = [];
+const knownSensors = [];
 
 const logger = winston.createLogger({
     format: winston.format.simple(),
@@ -28,31 +28,36 @@ app.get('/', (req, res) => {
 });
 
 app.post('/', (req,res) => {
-    const ip = sensorIPs.find(ip => req.ip.includes(ip));
-    if (ip) {
-        const dataPoint = helpers.extractDataPoint(req.body);
-        try {
-            sensors.saveDataPoint(ip, dataPoint, (result) => {
+    try {
+        const data = helpers.processRequest(req.body);
+        const name = data.name;
+        if (knownSensors.includes(name)){
+            const dataPoint = {
+                temperature: data.temperature,
+                humidity: data.humidity, 
+                date: Date.now(),
+            };
+            sensors.saveDataPoint(name, dataPoint, (result) => {
                 if(result.nModified > 0){
-                    logger.info(`Saved data point from ip:${ip}`);
-                }else {
-                    logger.info(`Failed to save data point from ip:${ip}`);
-                }
-                res.end();
+                        logger.info(`Saved data point from ip:${ip}`);
+                    }else {
+                        logger.info(`Failed to save data point from ip:${ip}`);
+                    }
+                    res.end();
             });
-        } catch (e) {
-            logger.error(e);
-            res.end()
+        }else{
+            logger.warn(`Encountered unknown sensor name when trying to save data point ${name}`);
+            res.end();
         }
-    } else {
-        logger.warn(`Unknown post request from ${req.ip}`);
+    } catch (e) {
+        logger.error(e);
         res.end();
     }
 });
 
 //ensure we have known sensor ips before starting
-sensors.getSensorIPs(ips => {
-    sensorIPs.push.apply(sensorIPs, ips);
+sensors.getKnownSensors(names => {
+    knownSensors.push.apply(knownSensors, names);
     app.listen(port, () => {
         logger.info(`Application listening on ${port}`)
     });

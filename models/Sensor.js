@@ -4,10 +4,6 @@ const SensorSchema = new mongoose.Schema({
         type : String, 
         required : true
     },
-    ip : {
-        type : String, 
-        required : true
-    },
     data : [{
         temperature: Number,
         humidity: Number,

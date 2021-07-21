@@ -1,7 +1,7 @@
 const Sensor = require('../models/Sensor'); 
 
 exports.findAll = (callback) => {
-    Sensor.find({}, {name: 1, ip: 1, data: 1}).lean().exec((err, sensors) => {
+    Sensor.find({}, {name: 1, data: 1}).lean().exec((err, sensors) => {
         if (err) {
             throw err; 
         }
@@ -9,17 +9,17 @@ exports.findAll = (callback) => {
     });
 };
 
-exports.getSensorIPs = (callback) => {
-    Sensor.find({}, {ip: 1}).lean().exec((err, sensors) => {
+exports.getKnownSensors = (callback) => {
+    Sensor.find({}, {name: 1}).lean().exec((err, sensors) => {
         if (err) {
             throw err; 
         }
-        callback(sensors.map(sensor => sensor.ip));
+        callback(sensors.map(sensor => sensor.name));
     });
 };
 
-exports.saveDataPoint = (ip, dataPoint, callback) => {
-    Sensor.updateOne({ip: ip}, {$push: {data: dataPoint}}, {upsert: false}, (err, result) => {
+exports.saveDataPoint = (name, dataPoint, callback) => {
+    Sensor.updateOne({name: name}, {$push: {data: dataPoint}}, {upsert: false}, (err, result) => {
         if (err) {
             throw err;
         }
