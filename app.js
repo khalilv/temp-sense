@@ -39,9 +39,9 @@ app.post('/', (req,res) => {
             };
             sensors.saveDataPoint(name, dataPoint, (result) => {
                 if(result.nModified > 0){
-                        logger.info(`Saved data point from ip:${ip}`);
+                        logger.info(`Saved data point for sensor ${name}`);
                     }else {
-                        logger.info(`Failed to save data point from ip:${ip}`);
+                        logger.info(`Failed to save data point for sensor ${name}`);
                     }
                     res.end();
             });
