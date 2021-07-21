@@ -1,21 +1,30 @@
 const express = require('express');
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 3000;
 const mongoose = require('mongoose');
 const db = require('./config/keys').MongoURI;
 const sensors = require('./database/sensors');
 const helpers = require('./helpers');
+const winston = require('winston');
 const sensorIPs = [];
 
+const logger = winston.createLogger({
+    format: winston.format.simple(),
+    transports: [
+        new winston.transports.Console()
+    ]
+});
+
 mongoose.connect(db, { useNewUrlParser: true,useUnifiedTopology: true })
-    .then(() => console.log('MongoDB Connected'))
+    .then(() => logger.info("MongoDB connected"))
     .catch(err => console.log(err));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.text()); 
 
+
 app.get('/', (req, res) => {
-    res.send('Hello World');
+    res.send('Welcome to the automated temperature and humidity monitoring server.');
 });
 
 app.post('/', (req,res) => {
@@ -25,16 +34,19 @@ app.post('/', (req,res) => {
         try {
             sensors.saveDataPoint(ip, dataPoint, (result) => {
                 if(result.nModified > 0){
-                    res.json({success : true, result: 'Saved data point'});
+                    logger.info(`Saved data point from ip:${ip}`);
                 }else {
-                    res.json({success : false, error: 'Failed to save data point', details: result });
+                    logger.info(`Failed to save data point from ip:${ip}`);
                 }
+                res.end();
             });
         } catch (e) {
-            res.json({success : false, error: e});
+            logger.error(e);
+            res.end()
         }
     } else {
-        res.json({success : false, error: 'IP address not recognized'});
+        logger.warn(`Unknown post request from ${req.ip}`);
+        res.end();
     }
 });
 
@@ -42,6 +54,6 @@ app.post('/', (req,res) => {
 sensors.getSensorIPs(ips => {
     sensorIPs.push.apply(sensorIPs, ips);
     app.listen(port, () => {
-        console.log(`Application listening at http://localhost:${port}`)
+        logger.info(`Application listening on ${port}`)
     });
 })
