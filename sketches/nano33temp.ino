@@ -2,8 +2,9 @@
 #include <SPI.h>
 #include <WiFiNINA.h>
 
-char ssid[] = "1171 rue beaudry";        //network SSID (name)
-char pass[] = "1234567890";    //network password (use for WPA, or use as key for WEP)
+#include "arduino_secrets.h" 
+char ssid[] = SECRET_SSID;        //network SSID (name)
+char pass[] = SECRET_PASS;        //network password (use for WPA, or use as key for WEP)
 int status = WL_IDLE_STATUS;
 char server[] = "morning-eyrie-98795.herokuapp.com";
 char port[] = "443";
@@ -66,7 +67,8 @@ void loop() {
     Serial.print("Could not connect to network: ");
     Serial.println(ssid);
   }
-  //sleep
+  
+  //sleep function 
   delay(20000); 
 }
 
