@@ -1,17 +1,10 @@
-const format = RegExp('^sensor:(\\w)*//temperature:(\\d*\\.?\\d*)//humidity:(\\d*\\.?\\d*)$');
+const format = RegExp('^sensor:(\\w*)//temperature:(\\d*\\.?\\d*)//humidity:(\\d*\\.?\\d*)$');
 
-exports.processRequest = (body) => {
-    if (format.test(body)){
-        const values = body.split('//'); 
-        const name = values[0].split(':')[1];
-        const temperature = values[1].split(':')[1];
-        const humidity = values[2].split(':')[1];
-        return {
-            name: name,
-            temperature: temperature,
-            humidity: humidity,
-        };
-    }else {
+exports.processPostRequest = (body) => {
+    const data = body.match(format);
+    if (data) {
+        return { name: data[1], temperature: data[2], humidity: data[3] };
+    } else {
         throw (`Invalid request body ${body}`);
     }
 };

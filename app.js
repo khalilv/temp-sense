@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 
 app.post('/', (req,res) => {
     try {
-        const data = helpers.processRequest(req.body);
+        const data = helpers.processPostRequest(req.body);
         const name = data.name;
         if (knownSensors.includes(name)){
             const dataPoint = {
@@ -55,7 +55,7 @@ app.post('/', (req,res) => {
     }
 });
 
-//ensure we have known sensor ips before starting
+//ensure we have known sensor names before starting
 sensors.getKnownSensors(names => {
     knownSensors.push.apply(knownSensors, names);
     app.listen(port, () => {
