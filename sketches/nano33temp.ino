@@ -5,10 +5,10 @@
 char ssid[] = "1171 rue beaudry";        //network SSID (name)
 char pass[] = "1234567890";    //network password (use for WPA, or use as key for WEP)
 int status = WL_IDLE_STATUS;
-char server[] = "10.0.0.33";
-char port[] = "8080";
+char server[] = "morning-eyrie-98795.herokuapp.com";
+char port[] = "443";
 
-WiFiClient client;
+WiFiSSLClient client;
 byte MAX_WIFI_ATTEMPTS = 10;
 byte MAX_POST_ATTEMPTS = 5; 
 
@@ -48,7 +48,7 @@ void loop() {
 
     //take temperature data
     delay(1000); 
-    char dummy [] = "temp:200//humidity:33";
+    char dummy [] = "sensor:s1//temperature:200//humidity:33";
 
     //send post req 
     if (post_data(dummy)) {
